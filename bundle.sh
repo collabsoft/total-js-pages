@@ -2,7 +2,6 @@
 
 require('total4');
 
-var tasks = [];
 var path = '--bundles--';
 
 function buildplugin(name, callback) {
@@ -19,13 +18,45 @@ console.log('| |--', 'app.bundle');
 BACKUP(path + '/app.bundle', PATH.root(), function() {
 	F.Fs.readdir(PATH.root('plugins'), function(err, response) {
 		response.wait(function(key, next) {
-			buildplugin(key, next);
+
+			switch (key) {
+				case 'dashboard':
+				case 'files':
+				case 'layouts':
+				case 'nav':
+				case 'pages':
+				case 'settings':
+				case 'variables':
+				case 'widgets':
+					next();
+					return;
+				default:
+					buildplugin(key, next);
+					return;
+			}
+
 		}, function() {
 			console.timeEnd('|-- Compilation');
 		});
 	});
 }, function(path, isdir) {
+
+	if (!isdir)
+		return path.split('/').length > 2;
+
 	var p = path.split('/').trim();
-	var dir = { controllers: true, definitions: true, modules: true, public: true, schemas: true, views: true };
-	return !p[0] || dir[p[0]];
+
+	if (!p[0] || (p.length === 1 && p[0] === 'plugins'))
+		return true;
+
+	var allowed = ['controllers', 'definitions', 'modules', 'public', 'schemas', 'views', 'plugins/pages', 'plugins/layouts', 'plugins/widgets', 'plugins/settings', 'plugins/files', 'plugins/nav', 'plugins/variables', 'plugins/dashboard'];
+
+	for (var m of allowed) {
+		if (path.indexOf(m) === 1) {
+			console.log('--->', path, m);
+			return true;
+		}
+	}
+
+	return false;
 });
