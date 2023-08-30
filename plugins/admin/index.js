@@ -1,7 +1,7 @@
 exports.icon = 'ti ti-key';
 exports.name = '@(Admin)';
 exports.position = 100;
-exports.visible = () => false;
+exports.visible = () => true;
 exports.import = 'extensions.html';
 exports.hidden = true;
 
@@ -30,7 +30,7 @@ FUNC.authadmin = function($) {
 			return;
 		}
 	}
-	// $.success({ name: 'Kokotaris', sa: true });
+
 	$.invalid();
 };
 
