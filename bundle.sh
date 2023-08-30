@@ -52,10 +52,8 @@ BACKUP(path + '/app.bundle', PATH.root(), function() {
 	var allowed = ['controllers', 'definitions', 'modules', 'public', 'schemas', 'views', 'plugins/pages', 'plugins/layouts', 'plugins/widgets', 'plugins/settings', 'plugins/files', 'plugins/nav', 'plugins/variables', 'plugins/dashboard'];
 
 	for (var m of allowed) {
-		if (path.indexOf(m) === 1) {
-			console.log('--->', path, m);
+		if (path.indexOf(m) === 1)
 			return true;
-		}
 	}
 
 	return false;
