@@ -92,9 +92,11 @@
 	<ui-component name="importer" path="common.form2" config="if:formwidgets;url:/_widgets/form.html"></ui-component>
 
 	@{json(model, 'pluginsdata')}
+
 	@{if user.iframe}
 	<script src="@{user.iframe}"></script>
 	@{fi}
+
 	<script>
 
 		ENVIRONMENT('cms');
