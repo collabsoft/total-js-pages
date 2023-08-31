@@ -116,7 +116,7 @@
 			<nav class="mainmenu">
 				<script type="text/navigation" name="Main">
 				{{ foreach m in value.children }}
-					<a href="{{ m.url }}" target="{{ m.target }}">{{ m.name }}</a>
+					<a href="{{ m.url }}" target="{{ m.target }}"{{ if m.selected }} class="selected"{{ fi }}>{{ m.name }}</a>
 				{{ end }}
 				</script>
 			</nav>
@@ -132,7 +132,7 @@
 				<li class="CMS_editor"><i class="ti ti-home mr5"></i>Breadcrumb</li>
 				<script type="text/breadcrumb">
 				{{ foreach m in value }}
-					<li><a href="{{ m.url }}">{{ if m.first }}<i class="ti ti-home"></i>{{ fi }}{{ m.name }}</a></li>
+					<li><a href="{{ m.url }}"{{ if m.last }} class="selected"{{ fi }}>{{ if m.first }}<i class="ti ti-home"></i>{{ fi }}{{ m.name }}</a></li>
 				{{ end }}
 				</script>
 			</ul>
@@ -148,7 +148,7 @@
 		<nav>
 			<script type="text/navigation" name="Footer">
 			{{ foreach m in value.children }}
-				<a href="{{ m.url }}" target="{{ m.target }}">{{ m.name }}</a>
+				<a href="{{ m.url }}" target="{{ m.target }}"{{ if m.selected }} class="selected"{{ fi }}>{{ m.name }}</a>
 			{{ end }}
 			</script>
 		</nav>

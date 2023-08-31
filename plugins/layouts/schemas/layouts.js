@@ -71,6 +71,7 @@ NEWSCHEMA('Layouts', function(schema) {
 					FUNC.save();
 					FUNC.refresh();
 					$.success();
+					delete MAIN.views[model.id];
 				});
 
 			});
@@ -197,10 +198,12 @@ NEWSCHEMA('Layouts/HTML', function(schema) {
 			var db = MAIN.db;
 			if (db.layouts.findItem('id', model.id)) {
 				importnavigation(model, null, function(err, resave) {
+
 					if (resave) {
 						FUNC.save();
 						FUNC.refresh();
 					}
+
 					importwidgets(model, function() {
 						db.fs.save(model.id, model.id + '.html', Buffer.from(model.html, 'utf8'), $.done());
 						delete MAIN.views[model.id];
