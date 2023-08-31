@@ -125,7 +125,6 @@ NEWSCHEMA('Layouts', function(schema) {
 			var id = $.params.id;
 			var index = MAIN.db.layouts.findIndex('id', id);
 			if (index !== -1) {
-				MAIN.db.nav = MAIN.db.nav.remove('layoutid', id);
 				MAIN.db.layouts.splice(index, 1);
 				MAIN.db.fs.remove(id);
 				$.success();
@@ -239,15 +238,15 @@ function importnavigation(model, html, callback) {
 
 		var scr = html.substring(beg, html.indexOf('>', index));
 
-		var name = scr.match(/id=".*?"/i)[0];
+		var name = scr.match(/name=".*?"/i)[0];
 
-		name = name.substring(4, name.length - 1);
+		name = name.substring(6, name.length - 1);
 
 		var id = HASH(name).toString(36);
 		var item = nav.findItem('id', id);
 
 		if (!item) {
-			nav.push({ id: id, layoutid: model.id, name: name, dtcreated: NOW, children: [] });
+			nav.push({ id: id, name: name, dtcreated: NOW, children: [] });
 			refresh = true;
 		}
 

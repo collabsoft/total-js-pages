@@ -114,7 +114,7 @@
 			</div>
 
 			<nav class="mainmenu">
-				<script type="text/navigation" id="Main">
+				<script type="text/navigation" name="Main">
 				{{ foreach m in value.children }}
 					<a href="{{ m.url }}" target="{{ m.target }}">{{ m.name }}</a>
 				{{ end }}
