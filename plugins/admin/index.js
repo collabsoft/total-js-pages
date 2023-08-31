@@ -1,7 +1,7 @@
 exports.icon = 'ti ti-key';
 exports.name = '@(Admin)';
 exports.position = 100;
-exports.visible = () => true;
+exports.visible = () => !CONF.op_reqtoken || !CONF.op_restoken;
 exports.import = 'extensions.html';
 exports.hidden = true;
 
