@@ -34,7 +34,7 @@ FUNC.breadcrumb = function(url) {
 	var processed = {};
 	if (page) {
 
-		arr.push(page);
+		arr.push({ id: page.id, parentid: page.id, name: page.name, title: page.title, color: page.color, icon: page.icon, language: page.language });
 		processed[page.id] = 1;
 
 		while (page) {
@@ -50,8 +50,11 @@ FUNC.breadcrumb = function(url) {
 			}
 
 			page = tmp;
-			page && arr.unshift(page);
+			page && arr.unshift({ id: page.id, parentid: page.id, name: page.name, title: page.title, color: page.color, icon: page.icon, language: page.language });
 		}
+
+		arr[0].first = true;
+		arr[arr.length - 1].last = true;
 	}
 
 	return arr;
@@ -81,7 +84,7 @@ FUNC.refresh = function() {
 			cache.widgets.push(item.ref);
 	}
 
-	cache.nav = [];
+	cache.nav = {};
 
 	for (var item of db.nav) {
 
@@ -107,7 +110,7 @@ FUNC.refresh = function() {
 			m.level = level;
 		}
 
-		cache.nav.push(item);
+		cache.nav[item.id] = item;
 	}
 };
 

@@ -15,6 +15,7 @@ NEWSCHEMA('Layouts', function(schema) {
 			var arr = [];
 			for (var item of MAIN.db.layouts)
 				arr.push({ id: item.id, name: item.name, icon: item.icon, color: item.color, dtcreated: item.dtcreated, dtupdated: item.dtupdated });
+
 			$.callback(arr);
 		}
 	});
@@ -37,7 +38,6 @@ NEWSCHEMA('Layouts', function(schema) {
 		name: 'Save layouts',
 		permissions: 'layouts',
 		action: function($, model) {
-
 			importwidgets(model, function() {
 				var db = MAIN.db;
 
@@ -53,7 +53,6 @@ NEWSCHEMA('Layouts', function(schema) {
 					item.name = model.name;
 					item.color = model.color;
 					item.icon = model.icon;
-
 					model.html && db.fs.save(model.id, model.id + '.html', model.html ? Buffer.from(model.html, 'utf8') : Buffer.alloc(0), NOOP);
 					delete model.html;
 					delete TEMP[item.id];
@@ -66,9 +65,11 @@ NEWSCHEMA('Layouts', function(schema) {
 					db.layouts.push(model);
 				}
 
-				FUNC.save();
-				FUNC.refresh();
-				$.success();
+				importnavigation(model, function() {
+					FUNC.save();
+					FUNC.refresh();
+					$.success();
+				});
 
 			});
 		}
@@ -197,9 +198,15 @@ NEWSCHEMA('Layouts/HTML', function(schema) {
 
 			var db = MAIN.db;
 			if (db.layouts.findItem('id', model.id)) {
-				importwidgets(model, function() {
-					db.fs.save(model.id, model.id + '.html', Buffer.from(model.html, 'utf8'), $.done());
-					delete MAIN.views[model.id];
+				importnavigation(model, function(err, resave) {
+					if (resave) {
+						FUNC.save();
+						FUNC.refresh();
+					}
+					importwidgets(model, function() {
+						db.fs.save(model.id, model.id + '.html', Buffer.from(model.html, 'utf8'), $.done());
+						delete MAIN.views[model.id];
+					});
 				});
 			} else
 				$.invalid('@(Layout not found)');
@@ -207,6 +214,42 @@ NEWSCHEMA('Layouts/HTML', function(schema) {
 	});
 
 });
+
+function importnavigation(model, callback) {
+
+	var index = -1;
+	var nav = MAIN.db.nav;
+	var refresh = false;
+
+	while (true) {
+		index = model.html.indexOf(' type="text/navigation"', index);
+
+		if (index === -1)
+			break;
+
+		var beg = model.html.lastIndexOf('<script', index);
+		var end = model.html.indexOf('</script>', index);
+
+		var scr = model.html.substring(beg, model.html.indexOf('>', index));
+
+		var name = scr.match(/id=".*?"/i)[0];
+
+		name = name.substring(4, name.length - 1);
+
+		var id = HASH(name).toString(36);
+		var item = nav.findItem('id', id);
+
+		if (!item) {
+			nav.push({ id: id, layoutid: model.id, name: name, dtcreated: NOW, children: [] });
+			refresh = true;
+		}
+
+		index = end;
+	}
+
+	callback(null, refresh);
+
+}
 
 function importwidgets(model, callback) {
 

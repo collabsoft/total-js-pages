@@ -1249,7 +1249,7 @@
 							self.backup(target);
 
 							var cls = 'w-' + widget.id.slug().replace(/\-/g, '');
-							var content = '<div class="CMS_widget CMS_remove {0}" data-cms="{2}__{3}" data-cms-id="{1}">{4}</div>'.format(cls, Date.now().toString(36), widget.id, encodeURIComponent(STRINGIFY(widget.config || {})), widget.html || widget.body);
+							var content = '<div class="CMS_widget CMS_remove {0}" data-cms="{2}__{3}" data-cms-id="{1}">\n{4}</div>'.format(cls, Date.now().toString(36), widget.id, encodeURIComponent(STRINGIFY(widget.config || {})), widget.html || widget.body);
 
 							if (after && after.length) {
 								after.after(content);
