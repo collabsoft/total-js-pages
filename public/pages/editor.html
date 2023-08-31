@@ -5,7 +5,7 @@
 
 <ui-plugin>
 	<ui-bind path="?.ready" config="visible" class="invisible">
-		<ui-component name="cmseditor" path="?.html" config="margin:60;parent:window;generate:?/generate;widgetsource:?/widgetsource;$assign:EDITOR;image:?/image;files:?/files">
+		<ui-component name="cmseditor" path="?.html" config="margin:60;parent:window;generate:?/generate;links:?/links;widgetsource:?/widgetsource;$assign:EDITOR;image:?/image;files:?/files">
 			 <ui-import config="url:/cmseditor/index.html;target:body"></ui-import>
 		</ui-component>
 	</ui-bind>
@@ -39,6 +39,10 @@
 				next(item.url);
 				hide();
 			});
+		};
+
+		exports.links = function(next) {
+			next(DEF.cl.links);
 		};
 
 		exports.generate = function(opt) {
@@ -127,7 +131,6 @@
 
 		exports.init = function(opt) {
 			meta = opt;
-			exports.tapi('nav_editor', '%nav');
 			exports.tapi('widgets_list', function(widgets) {
 				for (var item of widgets)
 					parsejs(item);

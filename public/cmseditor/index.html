@@ -790,8 +790,16 @@
 					if (disabled && name === 'repeat')
 						disabled = self.dom_parent_class('CMS_repeat') === null;
 
-					if (disabled && name === 'remove')
+					if (disabled && name === 'remove') {
 						disabled = temporary.wrapremove === null;
+						if (disabled) {
+							// is link created manually?
+							if (t.tagName === 'A' && target.hclass('CMS_edit')) {
+								var parent = target.parent().closest('.CMS_edit');
+								disabled = parent.length === 0;
+							}
+						}
+					}
 
 					if (disabled && name === 'widgets') {
 						temporary.wrap_widgets = self.dom_parent_class('CMS_widgets', 10);
@@ -1530,6 +1538,12 @@
 
 						if (target.hclass('CMS_expression')) {
 							target.replaceWith(target.html());
+							return;
+						}
+
+						if (target[0].tagName === 'A' && target.hclass('CMS_edit')) {
+							target.replaceWith(target.html());
+							self.iframe_toolbar().hide();
 							return;
 						}
 

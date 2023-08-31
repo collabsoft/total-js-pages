@@ -239,7 +239,6 @@
 
 		});
 
-
 		MIDDLEWARE('init', function(next) {
 			WAIT(() => common.ready && W.user && common.breadcrumb && W.BREADCRUMB, next, null, 60000);
 		});
@@ -264,6 +263,15 @@
 		ON('@flag hideloading', function() {
 			SETTER('loading/hide', 1000);
 		});
+
+		CLINIT('links', function(next) {
+			TAPI('pages_links', response => next(FUNC.sitemap(response)));
+		}, true);
+
+		CLINIT('nav', function(next) {
+			TAPI('nav_editor', next);
+		}, true);
+
 
 	</script>
 

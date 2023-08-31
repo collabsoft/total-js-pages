@@ -30,7 +30,7 @@ NEWSCHEMA('Layouts', function(schema) {
 			if (item)
 				$.callback(item);
 			else
-				$.invalid('@(Layout not found)');
+				$.invalid(404);
 		}
 	});
 
@@ -39,13 +39,17 @@ NEWSCHEMA('Layouts', function(schema) {
 		permissions: 'layouts',
 		action: function($, model) {
 			importwidgets(model, function() {
+
 				var db = MAIN.db;
+				var html = model.html;
+
+				delete model.html;
 
 				if (model.id) {
 
 					var item = db.layouts.findItem('id', model.id);
 					if (!item) {
-						$.invalid('@(Layout not found)');
+						$.invalid(404);
 						return;
 					}
 
@@ -53,19 +57,17 @@ NEWSCHEMA('Layouts', function(schema) {
 					item.name = model.name;
 					item.color = model.color;
 					item.icon = model.icon;
-					model.html && db.fs.save(model.id, model.id + '.html', model.html ? Buffer.from(model.html, 'utf8') : Buffer.alloc(0), NOOP);
-					delete model.html;
+					html && db.fs.save(model.id, model.id + '.html', html ? Buffer.from(html, 'utf8') : Buffer.alloc(0), NOOP);
 					delete TEMP[item.id];
 
 				} else {
 					model.id = UID();
 					model.dtcreated = NOW;
-					db.fs.save(model.id, model.id + '.html', model.html ? Buffer.from(model.html, 'utf8') : Buffer.alloc(0), NOOP);
-					delete model.html;
+					html && db.fs.save(model.id, model.id + '.html', html ? Buffer.from(html, 'utf8') : Buffer.alloc(0), NOOP);
 					db.layouts.push(model);
 				}
 
-				importnavigation(model, function() {
+				importnavigation(model, html, function() {
 					FUNC.save();
 					FUNC.refresh();
 					$.success();
@@ -120,17 +122,18 @@ NEWSCHEMA('Layouts', function(schema) {
 		params: '*id:String',
 		permissions: 'layouts',
 		action: function($) {
-
 			var id = $.params.id;
 			var index = MAIN.db.layouts.findIndex('id', id);
 			if (index !== -1) {
+				MAIN.db.nav = MAIN.db.nav.remove('layoutid', id);
 				MAIN.db.layouts.splice(index, 1);
 				MAIN.db.fs.remove(id);
 				$.success();
+				FUNC.refresh();
 				FUNC.save();
 				delete MAIN.views[id];
 			} else
-				$.invalid('@(Layout not found)');
+				$.invalid(404);
 		}
 	});
 
@@ -158,7 +161,7 @@ NEWSCHEMA('Layouts', function(schema) {
 				});
 
 			} else
-				$.invalid('@(Page not found)');
+				$.invalid(404);
 		}
 	});
 
@@ -180,14 +183,10 @@ NEWSCHEMA('Layouts/HTML', function(schema) {
 					var obj = {};
 					obj.name = item.name;
 					obj.html = buffer ? buffer.toString('utf8') : '';
-					/*
-					obj.html = obj.html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, function(text) {
-						return '<!--\n' + text.replace(/script/g, 'SCR') + '\n-->';
-					});*/
 					$.callback(obj);
 				});
 			} else
-				$.invalid('@(Page not found)');
+				$.invalid(404);
 		}
 	});
 
@@ -198,7 +197,7 @@ NEWSCHEMA('Layouts/HTML', function(schema) {
 
 			var db = MAIN.db;
 			if (db.layouts.findItem('id', model.id)) {
-				importnavigation(model, function(err, resave) {
+				importnavigation(model, null, function(err, resave) {
 					if (resave) {
 						FUNC.save();
 						FUNC.refresh();
@@ -209,28 +208,36 @@ NEWSCHEMA('Layouts/HTML', function(schema) {
 					});
 				});
 			} else
-				$.invalid('@(Layout not found)');
+				$.invalid(404);
 		}
 	});
 
 });
 
-function importnavigation(model, callback) {
+function importnavigation(model, html, callback) {
+
+	if (!html && !model.html) {
+		callback(null, false);
+		return;
+	}
 
 	var index = -1;
 	var nav = MAIN.db.nav;
 	var refresh = false;
 
+	if (model.html)
+		html = model.html;
+
 	while (true) {
-		index = model.html.indexOf(' type="text/navigation"', index);
+		index = html.indexOf(' type="text/navigation"', index);
 
 		if (index === -1)
 			break;
 
-		var beg = model.html.lastIndexOf('<script', index);
-		var end = model.html.indexOf('</script>', index);
+		var beg = html.lastIndexOf('<script', index);
+		var end = html.indexOf('</script>', index);
 
-		var scr = model.html.substring(beg, model.html.indexOf('>', index));
+		var scr = html.substring(beg, html.indexOf('>', index));
 
 		var name = scr.match(/id=".*?"/i)[0];
 

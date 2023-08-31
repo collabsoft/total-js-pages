@@ -79,16 +79,16 @@
 		};
 
 		exports.edit = function(el) {
-			var id = el instanceof jQuery ? el.attrd2('id') : el;
-			exports.tapi('nav_read/' + id + ' ERROR', function(response) {
+			var id = ATTRD(el);
+			exports.tapi('nav_read/{0} ERROR'.format(id), function(response) {
 				SET('formnav @reset', response);
 				SET('common.form', 'formnav');
 			});
 		};
 
 		exports.open = function(el) {
-			var id = el instanceof jQuery ? el.attrd2('id') : el;
-			exports.tapi('nav_read/' + id + ' ERROR', function(response) {
+			var id = ATTRD(el);
+			exports.tapi('nav_read/{0} ERROR'.format(id), function(response) {
 				SET('formsitemap @reset', response);
 				SET('common.form', 'formsitemap');
 			});

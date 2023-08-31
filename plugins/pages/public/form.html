@@ -84,6 +84,7 @@
 			exports.tapi('pages_save ERROR', model, function(response) {
 				hide();
 				EXEC('pluginpages/refresh');
+				CLRELOAD('links');
 			});
 		};
 

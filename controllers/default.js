@@ -1,4 +1,5 @@
 const REG_META = /<\/head>/;
+const REG_UI = /@\{ui\}/i;
 
 exports.install = function() {
 	ROUTE('+GET /admin/*', admin);
@@ -38,7 +39,7 @@ function compile_page(id, widgets, callback) {
 			callback(err);
 		} else {
 			var html = buffer ? buffer.toString('utf8') : '';
-			MAIN.views[id] = CMSCOMPILER(html, widgets);
+			MAIN.views[id] = CMSCOMPILER(html.replace(REG_UI, REPO.ui), widgets);
 			callback(null, MAIN.views[id]);
 		}
 	});
@@ -50,7 +51,7 @@ function compile_layout(id, widgets, callback) {
 			callback(err);
 		} else {
 			var html = buffer ? buffer.toString('utf8') : '';
-			MAIN.views[id] = CMSCOMPILER(html, widgets).importcss().importjs();
+			MAIN.views[id] = CMSCOMPILER(html.replace(REG_UI, REPO.ui), widgets).importcss().importjs();
 			callback(null, MAIN.views[id]);
 		}
 	});

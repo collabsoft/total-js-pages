@@ -48,7 +48,7 @@ NEWSCHEMA('Nav', function(schema) {
 			if (item)
 				$.callback(item);
 			else
-				$.invalid('@(Navigation not found)');
+				$.invalid(404);
 		}
 	});
 
@@ -63,7 +63,7 @@ NEWSCHEMA('Nav', function(schema) {
 
 				var item = db.nav.findItem('id', model.id);
 				if (!item) {
-					$.invalid('@(Navigation not found)');
+					$.invalid(404);
 					return;
 				}
 
@@ -111,7 +111,7 @@ NEWSCHEMA('Nav', function(schema) {
 				FUNC.save();
 				FUNC.refresh();
 			} else
-				$.invalid('@(Navigation not found)');
+				$.invalid(404);
 		}
 	});
 
