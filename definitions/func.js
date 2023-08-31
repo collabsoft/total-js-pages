@@ -34,7 +34,7 @@ FUNC.breadcrumb = function(url) {
 	var processed = {};
 	if (page) {
 
-		arr.push({ id: page.id, parentid: page.id, name: page.name, title: page.title, color: page.color, icon: page.icon, language: page.language });
+		arr.push({ id: page.id, parentid: page.id, url: page.url, name: page.name, title: page.title, color: page.color, icon: page.icon, language: page.language });
 		processed[page.id] = 1;
 
 		while (page) {
@@ -50,7 +50,7 @@ FUNC.breadcrumb = function(url) {
 			}
 
 			page = tmp;
-			page && arr.unshift({ id: page.id, parentid: page.id, name: page.name, title: page.title, color: page.color, icon: page.icon, language: page.language });
+			page && arr.unshift({ id: page.id, parentid: page.id, url: page.url, name: page.name, title: page.title, color: page.color, icon: page.icon, language: page.language });
 		}
 
 		arr[0].first = true;
@@ -75,6 +75,9 @@ FUNC.refresh = function() {
 
 	var db = MAIN.db;
 	var cache = MAIN.cache;
+
+	// Internal cache for rendered navigation & breadcrumb
+	cache.pages = {};
 
 	db.widgets.quicksort('dtcreated_desc');
 	cache.widgets = [];

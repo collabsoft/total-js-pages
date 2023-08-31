@@ -57,6 +57,29 @@ function compile_layout(id, widgets, callback) {
 	});
 }
 
+function navigation(id) {
+
+	var nav = this.nav[id] || { children: EMPTYARRAY };
+
+	if (nav.links) {
+		for (var m of nav.links)
+			m.selected = false;
+	}
+
+	nav.current = nav.links ? nav.links.findItem('url', this.url) : null;
+	var parent = nav.current;
+
+	while (parent) {
+		parent.selected = true;
+		parent = parent.parent;
+	}
+
+	nav.url = this.url;
+	nav.page = this.page;
+
+	return nav;
+}
+
 function render() {
 
 	var self = this;
@@ -85,6 +108,13 @@ function render() {
 			db.vars = {};
 
 		var opt = {};
+		var cache = MAIN.cache.pages;
+		var key = page.id;
+
+		if (!cache[key])
+			cache[key] = {};
+
+		opt.inlinecache = cache[key];
 		opt.controller = self;
 		opt.vars = db.vars;
 		opt.refs = db.refs;
@@ -102,6 +132,7 @@ function render() {
 		opt.robot = self.robot;
 		opt.breadcrumb = FUNC.breadcrumb(url);
 		opt.page = page;
+		opt.navigation = navigation;
 
 		opt.callback = function(err, response) {
 			if (response.css && response.css.length)

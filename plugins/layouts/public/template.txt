@@ -105,7 +105,7 @@
 				<button id="mobilemenu"><i class="ti ti-navicon"></i></button>
 			</div>
 
-			<div class="CMS_trash mainmenu">
+			<div class="CMS_editor mainmenu">
 				<a href="/">Link 1</a>
 				<a href="/">Link 2</a>
 				<a href="/">Link 3</a>
@@ -129,7 +129,7 @@
 			</div>
 
 			<ul class="breadcrumb">
-				<li class="CMS_trash"><i class="ti ti-home mr5"></i>Breadcrumb</li>
+				<li class="CMS_editor"><i class="ti ti-home mr5"></i>Breadcrumb</li>
 				<script type="text/breadcrumb">
 				{{ foreach m in value }}
 					<li><a href="{{ m.url }}">{{ if m.first }}<i class="ti ti-home"></i>{{ fi }}{{ m.name }}</a></li>
@@ -144,7 +144,7 @@
 	</div>
 
 	<footer>
-		<div class="CMS_trash center gray">Footer navigation</div>
+		<div class="CMS_editor center gray">Footer navigation</div>
 		<nav>
 			<script type="text/navigation" name="Footer">
 			{{ foreach m in value.children }}
