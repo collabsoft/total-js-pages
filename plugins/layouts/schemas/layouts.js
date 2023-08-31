@@ -237,7 +237,6 @@ function importnavigation(model, html, callback) {
 		var end = html.indexOf('</script>', index);
 
 		var scr = html.substring(beg, html.indexOf('>', index));
-
 		var name = scr.match(/name=".*?"/i)[0];
 
 		name = name.substring(6, name.length - 1);

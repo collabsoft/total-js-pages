@@ -146,7 +146,7 @@
 	<footer>
 		<div class="CMS_trash center gray">Footer navigation</div>
 		<nav>
-			<script type="text/navigation" id="Footer">
+			<script type="text/navigation" name="Footer">
 			{{ foreach m in value.children }}
 				<a href="{{ m.url }}" target="{{ m.target }}">{{ m.name }}</a>
 			{{ end }}
