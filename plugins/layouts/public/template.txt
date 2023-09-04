@@ -138,6 +138,7 @@
 			</ul>
 
 			<div id="CMS">
+				<div class="CMS_widgets"></div>
 			</div>
 
 		</div>

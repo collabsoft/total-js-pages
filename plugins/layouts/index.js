@@ -1,9 +1,9 @@
 exports.icon = 'ti ti-layer-group';
 exports.name = '@(Layouts)';
 exports.position = 3;
-exports.import = 'routes.html';
 exports.permissions = [{ id: 'layouts', name: 'Layouts' }];
 exports.visible = user => user.sa || user.permissions.includes('layouts');
+exports.import = 'routes.html';
 
 exports.install = function() {
 	ROUTE('+API    /admin/    -layouts_read/{id}      *Layouts        --> read');
