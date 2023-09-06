@@ -39,9 +39,18 @@ function compile_page(id, widgets, callback) {
 		if (err) {
 			callback(err);
 		} else {
+
 			var html = buffer ? buffer.toString('utf8') : '';
-			MAIN.views[id] = CMSCOMPILER(html.replace(REG_UI, REPO.ui).replace(REG_YEAR, NOW.getFullYear() + ''), widgets);
-			callback(null, MAIN.views[id]);
+			var value = {};
+			value.id = id;
+			value.html = html;
+			value.widgets = widgets;
+
+			TRANSFORM('page', value, function(err, value) {
+				MAIN.views[id] = CMSCOMPILER(value.html.replace(REG_UI, REPO.ui).replace(REG_YEAR, NOW.getFullYear() + ''), widgets);
+				callback(null, MAIN.views[id]);
+			});
+
 		}
 	});
 }
@@ -51,9 +60,19 @@ function compile_layout(id, widgets, callback) {
 		if (err) {
 			callback(err);
 		} else {
+
 			var html = buffer ? buffer.toString('utf8') : '';
-			MAIN.views[id] = CMSCOMPILER(html.replace(REG_UI, REPO.ui).replace(REG_YEAR, NOW.getFullYear() + ''), widgets).importcss().importjs();
-			callback(null, MAIN.views[id]);
+			var value = {};
+
+			value.id = id;
+			value.html = html;
+			value.widgets = widgets;
+
+			TRANSFORM('layout', value, function(err, value) {
+				MAIN.views[id] = CMSCOMPILER(value.html.replace(REG_UI, REPO.ui).replace(REG_YEAR, NOW.getFullYear() + ''), widgets).importcss().importjs();
+				callback(null, MAIN.views[id]);
+			});
+
 		}
 	});
 }
@@ -136,9 +155,11 @@ function render() {
 		opt.navigation = navigation;
 
 		opt.callback = function(err, response) {
-			if (response.css && response.css.length)
-				response.html = response.html.replace(/<\/style>/, '\n' + U.minify_css(response.css.join('')) + '</style>');
-			self.content(response.html, 'text/html');
+			TRANSFORM('render', response, function(err, response) {
+				if (response.css && response.css.length)
+					response.html = response.html.replace(/<\/style>/, '\n' + U.minify_css(response.css.join('')) + '</style>');
+				self.content(response.html, 'text/html');
+			}, self);
 		};
 
 		var title = page.title || page.name;

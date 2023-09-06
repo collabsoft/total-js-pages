@@ -197,6 +197,9 @@ FUNC.load = function(callback) {
 		MAIN.db = value;
 		MAIN.views = {};
 
+		if (!value.storage)
+			value.storage = {};
+
 		value.ready = true;
 		value.fs = FILESTORAGE(MAIN.id);
 
