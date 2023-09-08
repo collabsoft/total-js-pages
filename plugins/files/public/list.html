@@ -65,7 +65,7 @@
 			if (e && !(e instanceof jQuery))
 				opt.files = e;
 
-			opt.url = '/upload/' + common.openplatform;
+			opt.url = ENV('upload');
 			opt.multiple = true;
 			opt.width = meta.width;
 			opt.height = meta.height;

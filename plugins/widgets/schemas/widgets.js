@@ -48,6 +48,7 @@ NEWSCHEMA('Widgets', function(schema) {
 			var cms = MAIN.db;
 			var item = model.id ? cms.widgets.findItem('id', model.id) : null;
 			var done = function() {
+				cms.widgets.quicksort('name');
 				FUNC.refresh();
 				FUNC.save();
 				MAIN.views = {};

@@ -65,7 +65,7 @@
 		exports.upload = function() {
 			var opt = {};
 
-			opt.url = '/upload/' + common.openplatform;
+			opt.url = ENV('upload');
 			opt.multiple = true;
 
 			switch (meta.type) {

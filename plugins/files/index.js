@@ -6,8 +6,8 @@ exports.visible = user => user.sa || user.permissions.includes('files');
 
 exports.install = function() {
 
-	ROUTE('+POST    /upload/           +files_upload   *Files          --> insert', ['upload'], 1024 * 5);
-	ROUTE('+POST    /upload/base64/    +files_base64   *Files          --> insert', 1024 * 5);
+	ROUTE('+POST    /admin/upload/                  +files_upload   *Files          --> insert', ['upload'], 1024 * 5);
+	ROUTE('+POST    /admin/upload/base64/           +files_base64   *Files          --> insert', 1024 * 5);
 	ROUTE('FILE     /download/*.*',   files);
 
 	ROUTE('+API    /admin/    -files_list           *Files   --> list');

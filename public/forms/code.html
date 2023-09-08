@@ -30,7 +30,7 @@
 
 		exports.dropfiles = function(e) {
 			var opt = {};
-			opt.url = '/upload/';
+			opt.url = ENV('upload');
 			opt.files = e;
 			opt.callback = function(response, err) {
 				var builder = [];

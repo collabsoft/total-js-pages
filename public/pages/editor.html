@@ -92,7 +92,7 @@
 
 		exports.upload = function(file, next) {
 			var opt = {};
-			opt.url = '/upload/' + common.openplatform;
+			opt.url = ENV('upload');
 			opt.files = [file];
 			opt.height = file.height;
 			opt.width = file.width;
@@ -110,7 +110,7 @@
 				return;
 
 			var opt = {};
-			opt.url = '/upload/' + common.openplatform;
+			opt.url = ENV('upload');
 			opt.width = meta.width;
 			opt.height = meta.height;
 			opt.files = meta.files;
