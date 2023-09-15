@@ -141,6 +141,7 @@ function render() {
 		opt.widgets = MAIN.cache.widgets || EMPTYARRAY;
 		opt.nav = MAIN.cache.nav;
 		opt.url = url;
+		opt.user = self.user;
 		opt.ua = self.req.headers['user-agent'];
 
 		if (opt.ua)

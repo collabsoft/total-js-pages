@@ -1,4 +1,5 @@
 const PARSER = { settings: '<settings>', css: '<style>', total: '<script total>', html: '<body>', js: '<script>', template: '<template>', readme: '<readme>' };
+const REG_CLASS = /CLASS/g;
 
 FUNC.recompile = function(item) {
 	var meta = item.html.parseComponent(PARSER);
@@ -17,6 +18,17 @@ FUNC.recompile = function(item) {
 		} else
 			console.log(e + '', metadata);
 	}
+
+	if (!item.ref.id)
+		item.ref.id = item.ref.name;
+
+	var uid = item.ref.id.slug().replace(/\-/g, '');
+
+	if (meta.css)
+		meta.css = meta.css.replace(REG_CLASS, 'w-' + uid);
+
+	if (meta.html)
+		meta.html = meta.html.replace(REG_CLASS, 'w-' + uid);
 
 	item.ref.ui = meta;
 
