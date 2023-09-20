@@ -8,7 +8,7 @@ NEWSCHEMA('Settings', function(schema) {
 			var model = {};
 			var language = $.user.language;
 
-			for (var key in PREF) {
+			for (let key in PREF) {
 				var val = PREF[key];
 				if (key !== 'user' && typeof(val) !== 'function')
 					model[key] = val;
