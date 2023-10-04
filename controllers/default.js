@@ -119,6 +119,11 @@ function render() {
 		}
 	}
 
+	if (!page && url === '/') {
+		self.redirect('/admin/');
+		return;
+	}
+
 	if (page) {
 
 		if (!db.refs)
